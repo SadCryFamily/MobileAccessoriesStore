@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <property name="accessory_type_default" value="OTHER" dbms="postgresql"/>
+
+    <changeSet id="1" author="Semen Gulenko">
+        <createTable tableName="accessory_general">
+            <column name="accessory_id" type="uuid">
+                <constraints primaryKeyName="pk_accessory_id" primaryKey="true" nullable="false"/>
+            </column>
+
+            <column name="accessory_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="accessory_description" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="accessory_type" type="text" defaultValue="${accessory_type_default}">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="accessory_price" type="java.math.BigDecimal">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="accessory_currency" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2" author="Semen Gulenko">
+        <addColumn tableName="accessory_general">
+            <column name="creation_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_update_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
