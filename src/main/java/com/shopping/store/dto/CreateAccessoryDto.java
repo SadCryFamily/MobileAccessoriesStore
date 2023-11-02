@@ -4,11 +4,13 @@ import com.shopping.store.enums.AccessoryType;
 import com.shopping.store.enums.Currency;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class CreateAccessoryDto {
 
     private String accessoryName;

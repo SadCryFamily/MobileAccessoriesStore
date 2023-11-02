@@ -1,7 +1,7 @@
 package com.shopping.store.dto;
 
-import com.shopping.store.entity.AccessoryInfo;
-import com.shopping.store.entity.AccessoryPrice;
+import com.shopping.store.entity.nested.AccessoryInfo;
+import com.shopping.store.entity.nested.AccessoryPrice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

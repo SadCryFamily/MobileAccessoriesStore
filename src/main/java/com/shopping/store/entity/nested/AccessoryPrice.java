@@ -1,4 +1,4 @@
-package com.shopping.store.entity;
+package com.shopping.store.entity.nested;
 
 import com.shopping.store.enums.Currency;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,7 @@
 package com.shopping.store.entity;
 
+import com.shopping.store.entity.nested.AccessoryInfo;
+import com.shopping.store.entity.nested.AccessoryPrice;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
