@@ -1,5 +1,6 @@
 package com.shopping.store.entity;
 
+import com.shopping.store.entity.nested.AccessoryDate;
 import com.shopping.store.entity.nested.AccessoryInfo;
 import com.shopping.store.entity.nested.AccessoryPrice;
 import lombok.AllArgsConstructor;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Getter
 @Setter
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, AccessoryAuditListener.class})
 public class AccessoryGeneral {
 
     @Id
@@ -39,11 +40,6 @@ public class AccessoryGeneral {
     @Embedded
     private AccessoryPrice accessoryPrice;
 
-    @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate;
-
-    @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date lastUpdateDate;
+    @Embedded
+    private AccessoryDate accessoryDate;
 }

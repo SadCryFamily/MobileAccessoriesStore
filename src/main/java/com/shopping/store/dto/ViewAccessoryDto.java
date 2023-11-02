@@ -1,5 +1,6 @@
 package com.shopping.store.dto;
 
+import com.shopping.store.entity.nested.AccessoryDate;
 import com.shopping.store.entity.nested.AccessoryInfo;
 import com.shopping.store.entity.nested.AccessoryPrice;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,6 @@ public class ViewAccessoryDto {
 
     private AccessoryPrice accessoryPrice;
 
-    private Date creationDate;
+    private AccessoryDate accessoryDate;
 
 }
