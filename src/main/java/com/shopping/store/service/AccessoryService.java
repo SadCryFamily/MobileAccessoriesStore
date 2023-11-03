@@ -1,6 +1,7 @@
 package com.shopping.store.service;
 
 import com.shopping.store.dto.CreateAccessoryDto;
+import com.shopping.store.dto.DeleteAccessoryDto;
 import com.shopping.store.dto.ViewAccessoryDto;
 import com.shopping.store.dto.ViewCreatedAccessoryDto;
 import com.shopping.store.enums.AccessoryType;
@@ -16,5 +17,7 @@ public interface AccessoryService {
     ViewAccessoryDto viewAccessoryByArticle(UUID article);
 
     List<ViewAccessoryDto> viewAllAccessories(Optional<AccessoryType> type);
+
+    Integer deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto);
 
 }
