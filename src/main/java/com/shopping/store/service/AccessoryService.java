@@ -15,6 +15,8 @@ public interface AccessoryService {
 
     List<ViewAccessoryDto> viewAllAccessories(Optional<AccessoryType> type);
 
+    ViewUpdatedAccessoryDto updateAccessoryByArticle(UUID article, UpdateAccessoryDto accessoryDto);
+
     ViewDeletedAccessoryDto deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto);
 
 }

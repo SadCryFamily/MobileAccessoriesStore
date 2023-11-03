@@ -1,4 +1,4 @@
-package com.shopping.store.repository;
+package com.shopping.store.repository.criteria;
 
 import com.shopping.store.entity.AccessoryGeneral;
 
@@ -10,5 +10,7 @@ public interface AccessoryRepositoryCriteria {
     Optional<AccessoryGeneral> findAccessoryBeforeDeleteByArticle(UUID article);
 
     Integer deleteAccessoryByArticle(UUID article);
+
+    Integer updateAccessoryByArticle(UUID article);
 
 }

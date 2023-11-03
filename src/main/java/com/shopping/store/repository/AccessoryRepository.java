@@ -1,6 +1,7 @@
 package com.shopping.store.repository;
 
 import com.shopping.store.entity.AccessoryGeneral;
+import com.shopping.store.repository.criteria.AccessoryRepositoryCriteria;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;

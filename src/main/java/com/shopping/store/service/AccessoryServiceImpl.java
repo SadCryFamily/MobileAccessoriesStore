@@ -2,10 +2,13 @@ package com.shopping.store.service;
 
 import com.shopping.store.dto.*;
 import com.shopping.store.entity.AccessoryGeneral;
+import com.shopping.store.entity.nested.AccessoryInfo;
+import com.shopping.store.entity.nested.AccessoryPrice;
 import com.shopping.store.enums.AccessoryType;
 import com.shopping.store.exception.DeleteNotExistedAccessoryException;
 import com.shopping.store.exception.NothingToShowAccessoryException;
 import com.shopping.store.exception.UnableToFindAccessoryException;
+import com.shopping.store.exception.UpdateNotExistedAccessoryException;
 import com.shopping.store.mapper.AccessoryMapper;
 import com.shopping.store.repository.AccessoryRepository;
 import lombok.RequiredArgsConstructor;
@@ -76,6 +79,40 @@ public class AccessoryServiceImpl implements AccessoryService {
         return (type.isPresent()) ?
                 (this.getAllAccessoriesByFilter(viewAccessories, type)) :
                 (this.getAllAccessoriesDefault(viewAccessories));
+    }
+
+    @Override
+    @Transactional
+    public ViewUpdatedAccessoryDto updateAccessoryByArticle(UUID article, UpdateAccessoryDto accessoryDto) {
+
+        AccessoryGeneral accessoryGeneral =
+                accessoryRepository.findAccessoryBeforeDeleteByArticle(article)
+                        .orElseThrow(() -> {
+
+                            log.error("ERROR -> Reason: updateAccessoryByArticle(), Update [Accessory] by ID: {}, Caused: {}",
+                                    article,
+                                    UpdateNotExistedAccessoryException.class);
+
+                            return new UpdateNotExistedAccessoryException("Unfortunately, you can't update non-existed accessory!");
+                        });
+
+        AccessoryInfo newAccessoryInfo = new AccessoryInfo(
+                accessoryDto.getAccessoryName(),
+                accessoryDto.getAccessoryDescription(),
+                accessoryDto.getAccessoryType()
+        );
+
+        AccessoryPrice newAccessoryPrice =
+                new AccessoryPrice(accessoryDto.getAccessoryPrice(), accessoryDto.getAccessoryCurrency());
+
+        accessoryGeneral.setAccessoryInfo(newAccessoryInfo);
+        accessoryGeneral.setAccessoryPrice(newAccessoryPrice);
+
+        log.info("UPDATE -> [Accessory] by ID: {}", article);
+        return new ViewUpdatedAccessoryDto(
+                accessoryGeneral.getAccessoryId(), accessoryGeneral.getAccessoryInfo(),
+                accessoryGeneral.getAccessoryPrice(), accessoryGeneral.getAccessoryDate()
+        );
     }
 
     @Override

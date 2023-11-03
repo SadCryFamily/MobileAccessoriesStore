@@ -1,14 +1,12 @@
-package com.shopping.store.repository;
+package com.shopping.store.repository.criteria;
 
 import com.shopping.store.entity.AccessoryGeneral;
+import com.shopping.store.repository.criteria.AccessoryRepositoryCriteria;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaDelete;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,6 +45,7 @@ public class AccessoryRepositoryCriteriaImpl implements AccessoryRepositoryCrite
     public Integer deleteAccessoryByArticle(UUID article) {
 
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
         CriteriaDelete<AccessoryGeneral> delete = criteriaBuilder.createCriteriaDelete(AccessoryGeneral.class);
         Root<AccessoryGeneral> root = delete.from(AccessoryGeneral.class);
 
@@ -55,5 +54,21 @@ public class AccessoryRepositoryCriteriaImpl implements AccessoryRepositoryCrite
         Query deleteAccessoryQuery = entityManager.createQuery(delete);
 
         return deleteAccessoryQuery.executeUpdate();
+    }
+
+    @Override
+    @Transactional
+    public Integer updateAccessoryByArticle(UUID article) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        CriteriaUpdate<AccessoryGeneral> update = criteriaBuilder.createCriteriaUpdate(AccessoryGeneral.class);
+        Root<AccessoryGeneral> root = update.from(AccessoryGeneral.class);
+
+        update.where(criteriaBuilder.equal(root.get("accessoryId"), article));
+
+        Query updateAccessoryQuery = entityManager.createQuery(update);
+
+        return updateAccessoryQuery.executeUpdate();
     }
 }
