@@ -37,6 +37,13 @@ public class AccessoryController {
         return accessoryService.viewAllAccessories(Optional.ofNullable(type));
     }
 
+    @PutMapping("/accessory/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public ViewUpdatedAccessoryDto updateAccessoryByArticle(@PathVariable("id") UUID article,
+                                                            @RequestBody @Valid UpdateAccessoryDto accessoryDto) {
+        return accessoryService.updateAccessoryByArticle(article, accessoryDto);
+    }
+
     @DeleteMapping("/accessory")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public ViewDeletedAccessoryDto deleteAccessoryByArticle(@RequestBody @Valid DeleteAccessoryDto dto) {
