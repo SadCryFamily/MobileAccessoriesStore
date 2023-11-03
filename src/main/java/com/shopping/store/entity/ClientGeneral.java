@@ -1,9 +1,9 @@
 package com.shopping.store.entity;
 
-import com.shopping.store.entity.listener.AccessoryAuditListener;
-import com.shopping.store.entity.nested.AccessoryDate;
-import com.shopping.store.entity.nested.AccessoryInfo;
-import com.shopping.store.entity.nested.AccessoryPrice;
+import com.shopping.store.entity.listener.ClientAuditListener;
+import com.shopping.store.entity.nested.ClientBasicInfo;
+import com.shopping.store.entity.nested.ClientContacts;
+import com.shopping.store.entity.nested.ClientDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,13 +15,13 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "accessory_general")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-@EntityListeners({AuditingEntityListener.class, AccessoryAuditListener.class})
-public class AccessoryGeneral {
+@Table(name = "client_general")
+@EntityListeners({AuditingEntityListener.class, ClientAuditListener.class})
+public class ClientGeneral {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -29,15 +29,16 @@ public class AccessoryGeneral {
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
     )
-    @Column(name = "accessory_id")
-    private UUID accessoryId;
+    @Column(name = "client_id")
+    private UUID clientId;
 
     @Embedded
-    private AccessoryInfo accessoryInfo;
+    private ClientBasicInfo clientBasicInfo;
 
     @Embedded
-    private AccessoryPrice accessoryPrice;
+    private ClientContacts clientContacts;
 
     @Embedded
-    private AccessoryDate accessoryDate;
+    private ClientDate clientDate;
+
 }

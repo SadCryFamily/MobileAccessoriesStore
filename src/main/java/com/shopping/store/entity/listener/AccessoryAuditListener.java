@@ -1,8 +1,8 @@
-package com.shopping.store.entity;
+package com.shopping.store.entity.listener;
 
+import com.shopping.store.entity.AccessoryGeneral;
 import com.shopping.store.entity.nested.AccessoryDate;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
 import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;

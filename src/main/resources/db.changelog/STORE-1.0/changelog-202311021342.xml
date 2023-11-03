@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+		http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="3" author="Semen Gulenko">
+        <createTable tableName="client_general">
+            <column name="client_id" type="uuid">
+                <constraints primaryKeyName="pk_client_id" primaryKey="true"/>
+            </column>
+
+            <column name="client_full_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_name" type="text">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="client_email" type="text">
+                <constraints nullable="false" uniqueConstraintName="uk_client_email" unique="true"/>
+            </column>
+
+            <column name="client_phone" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="4" author="Semen Gulenko">
+        <addColumn tableName="client_general">
+            <column name="creation_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="last_update_date" type="timestamp">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

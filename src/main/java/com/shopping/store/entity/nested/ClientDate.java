@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Embeddable
@@ -13,7 +16,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AccessoryDate {
+public class ClientDate {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creation_date")
