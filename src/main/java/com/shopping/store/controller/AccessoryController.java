@@ -1,12 +1,8 @@
 package com.shopping.store.controller;
 
-import com.shopping.store.dto.CreateAccessoryDto;
-import com.shopping.store.dto.DeleteAccessoryDto;
-import com.shopping.store.dto.ViewAccessoryDto;
-import com.shopping.store.dto.ViewCreatedAccessoryDto;
+import com.shopping.store.dto.*;
 import com.shopping.store.enums.AccessoryType;
 import com.shopping.store.service.AccessoryService;
-import com.sun.xml.bind.v2.runtime.output.DOMOutput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +39,7 @@ public class AccessoryController {
 
     @DeleteMapping("/accessory")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    public Integer deleteAccessoryByArticle(@RequestBody @Valid DeleteAccessoryDto dto) {
+    public ViewDeletedAccessoryDto deleteAccessoryByArticle(@RequestBody @Valid DeleteAccessoryDto dto) {
         return accessoryService.deleteAccessoryByArticle(dto);
     }
 

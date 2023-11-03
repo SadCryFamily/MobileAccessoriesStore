@@ -1,11 +1,9 @@
 package com.shopping.store.service;
 
-import com.shopping.store.dto.CreateAccessoryDto;
-import com.shopping.store.dto.DeleteAccessoryDto;
-import com.shopping.store.dto.ViewAccessoryDto;
-import com.shopping.store.dto.ViewCreatedAccessoryDto;
+import com.shopping.store.dto.*;
 import com.shopping.store.entity.AccessoryGeneral;
 import com.shopping.store.enums.AccessoryType;
+import com.shopping.store.exception.DeleteNotExistedAccessoryException;
 import com.shopping.store.exception.NothingToShowAccessoryException;
 import com.shopping.store.exception.UnableToFindAccessoryException;
 import com.shopping.store.mapper.AccessoryMapper;
@@ -82,8 +80,30 @@ public class AccessoryServiceImpl implements AccessoryService {
 
     @Override
     @Transactional
-    public Integer deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto) {
-        return accessoryRepository.removeByAccessoryId(accessoryDto.getAccessoryId());
+    public ViewDeletedAccessoryDto deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto) {
+
+        AccessoryGeneral deletableAccessory =
+                accessoryRepository
+                        .findAccessoryBeforeDeleteByArticle(accessoryDto.getAccessoryId())
+                        .orElseThrow(() -> {
+
+                            log.error("ERROR -> Reason: deleteAccessoryByArticle(), Trying delete empty [Accessory] by ID: {}, Cause: {}",
+                                    accessoryDto.getAccessoryId(),
+                                    DeleteNotExistedAccessoryException.class);
+
+                            return new DeleteNotExistedAccessoryException("Unfortunately, you can't delete non-existed accessory!");
+                        });
+
+        Integer deletionStatus =
+                accessoryRepository.deleteAccessoryByArticle(deletableAccessory.getAccessoryId());
+
+        ViewDeletedAccessoryDto viewDeletedAccessoryDto = new ViewDeletedAccessoryDto(
+                deletableAccessory.getAccessoryId(),
+                deletionStatus
+        );
+
+        log.info("DELETE -> Accessory by ID: {}", accessoryDto.getAccessoryId());
+        return viewDeletedAccessoryDto;
     }
 
     private List<ViewAccessoryDto> getAllAccessoriesByFilter(List<AccessoryGeneral> viewAccessories, Optional<AccessoryType> type) {
