@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface AccessoryRepository extends JpaRepository<AccessoryGeneral, UUID> {
+public interface AccessoryRepository extends JpaRepository<AccessoryGeneral, UUID>, AccessoryRepositoryCriteria {
 
     @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<AccessoryGeneral> findByAccessoryId(UUID id);

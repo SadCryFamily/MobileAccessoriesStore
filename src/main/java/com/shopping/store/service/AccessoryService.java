@@ -1,9 +1,6 @@
 package com.shopping.store.service;
 
-import com.shopping.store.dto.CreateAccessoryDto;
-import com.shopping.store.dto.DeleteAccessoryDto;
-import com.shopping.store.dto.ViewAccessoryDto;
-import com.shopping.store.dto.ViewCreatedAccessoryDto;
+import com.shopping.store.dto.*;
 import com.shopping.store.enums.AccessoryType;
 
 import java.util.List;
@@ -18,6 +15,6 @@ public interface AccessoryService {
 
     List<ViewAccessoryDto> viewAllAccessories(Optional<AccessoryType> type);
 
-    Integer deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto);
+    ViewDeletedAccessoryDto deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto);
 
 }

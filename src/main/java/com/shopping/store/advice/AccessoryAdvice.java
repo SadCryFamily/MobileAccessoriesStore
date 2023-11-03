@@ -1,7 +1,6 @@
 package com.shopping.store.advice;
 
-import com.shopping.store.exception.NothingToShowAccessoryException;
-import com.shopping.store.exception.UnableToFindAccessoryException;
+import com.shopping.store.exception.AbstractAccessoryException;
 import com.shopping.store.util.ErrorsMapperUtil;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,15 +12,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@RestControllerAdvice
+@RestControllerAdvice(basePackages = "com.shopping.store.controller")
 public class AccessoryAdvice {
 
-    @ExceptionHandler({UnableToFindAccessoryException.class, NothingToShowAccessoryException.class})
-    public ResponseEntity<Map<String, List<String>>> handleCreateExistingCustomerException(RuntimeException e) {
+    @ExceptionHandler({AbstractAccessoryException.class})
+    public ResponseEntity<Map<String, List<String>>> handleAccessoryErrors(AbstractAccessoryException e) {
         List<String> errorsList = Collections.singletonList(e.getMessage());
 
         return new ResponseEntity<>(ErrorsMapperUtil.getErrorsMap(errorsList),
-                new HttpHeaders(), HttpStatus.ALREADY_REPORTED);
+                new HttpHeaders(), HttpStatus.BAD_REQUEST);
     }
 
 }
