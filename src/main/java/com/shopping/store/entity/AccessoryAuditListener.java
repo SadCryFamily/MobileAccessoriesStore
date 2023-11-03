@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.PrePersist;
+import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 import java.util.Date;
 
@@ -20,6 +21,11 @@ public class AccessoryAuditListener {
     @PreUpdate
     public void beforeUpdatePersist(AccessoryGeneral accessoryGeneral) {
         accessoryGeneral.getAccessoryDate().setLastUpdateDate(new Date());
+    }
+
+    @PreRemove
+    public void beforeDeletePersist(AccessoryGeneral accessoryGeneral) {
+
     }
 
 }

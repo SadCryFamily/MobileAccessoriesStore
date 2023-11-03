@@ -1,6 +1,7 @@
 package com.shopping.store.service;
 
 import com.shopping.store.dto.CreateAccessoryDto;
+import com.shopping.store.dto.DeleteAccessoryDto;
 import com.shopping.store.dto.ViewAccessoryDto;
 import com.shopping.store.dto.ViewCreatedAccessoryDto;
 import com.shopping.store.entity.AccessoryGeneral;
@@ -44,7 +45,7 @@ public class AccessoryServiceImpl implements AccessoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public ViewAccessoryDto viewAccessoryByArticle(UUID article) {
 
         Optional<AccessoryGeneral> optionalAccessoryGeneral = accessoryRepository.findByAccessoryId(article);
@@ -63,20 +64,26 @@ public class AccessoryServiceImpl implements AccessoryService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<ViewAccessoryDto> viewAllAccessories(Optional<AccessoryType> type) {
 
         List<AccessoryGeneral> viewAccessories =
-                accessoryRepository.findAll(Sort.by("accessoryDate.creationDate"));
+                accessoryRepository.findAll(Sort.by(Sort.Direction.DESC, "accessoryDate.creationDate"));
 
         if (viewAccessories.size() == 0) {
             log.error("ERROR -> Reason: viewAllAccessories(), Cause: {}", NothingToShowAccessoryException.class);
-            throw new NothingToShowAccessoryException("No [Accessory] has presented.");
+            throw new NothingToShowAccessoryException("Not any [Accessory] has presented.");
         }
 
         return (type.isPresent()) ?
                 (this.getAllAccessoriesByFilter(viewAccessories, type)) :
                 (this.getAllAccessoriesDefault(viewAccessories));
+    }
+
+    @Override
+    @Transactional
+    public Integer deleteAccessoryByArticle(DeleteAccessoryDto accessoryDto) {
+        return accessoryRepository.removeByAccessoryId(accessoryDto.getAccessoryId());
     }
 
     private List<ViewAccessoryDto> getAllAccessoriesByFilter(List<AccessoryGeneral> viewAccessories, Optional<AccessoryType> type) {
