@@ -9,8 +9,4 @@ public interface AccessoryRepositoryCriteria {
 
     Optional<AccessoryGeneral> findAccessoryBeforeDeleteByArticle(UUID article);
 
-    Integer deleteAccessoryByArticle(UUID article);
-
-    Integer updateAccessoryByArticle(UUID article);
-
 }
