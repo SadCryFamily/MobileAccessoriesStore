@@ -4,6 +4,11 @@ import com.shopping.store.dto.*;
 import com.shopping.store.enums.AccessoryType;
 import com.shopping.store.service.AccessoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.Cache;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.*;
+import org.springframework.data.redis.cache.CacheStatistics;
+import org.springframework.data.redis.cache.RedisCache;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,20 +23,26 @@ public class AccessoryController {
 
     private final AccessoryService accessoryService;
 
+    private final CacheManager cacheManager;
+
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @CacheEvict(value = "accessory-list", allEntries = true)
     public ViewCreatedAccessoryDto createAccessory(@RequestBody @Valid CreateAccessoryDto createDto) {
+        cacheManager.getCacheNames();
         return accessoryService.createAccessory(createDto);
     }
 
     @GetMapping("/accessory/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Cacheable(cacheNames = "accessory", key = "#article", sync = true)
     public ViewAccessoryDto viewAccessoryByArticle(@PathVariable("id") UUID article) {
         return accessoryService.viewAccessoryByArticle(article);
     }
 
     @GetMapping("/accessories")
     @ResponseStatus(HttpStatus.OK)
+    @Cacheable(cacheNames = "accessory-list", sync = true)
     public List<ViewAccessoryDto> viewAllAccessories(
             @RequestParam(value = "filter", required = false) AccessoryType type) {
         return accessoryService.viewAllAccessories(Optional.ofNullable(type));
@@ -39,6 +50,10 @@ public class AccessoryController {
 
     @PutMapping("/accessory/{id}")
     @ResponseStatus(HttpStatus.OK)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "accessory", key = "#article"),
+            @CacheEvict(cacheNames = "accessory-list", allEntries = true)
+    })
     public ViewUpdatedAccessoryDto updateAccessoryByArticle(@PathVariable("id") UUID article,
                                                             @RequestBody @Valid UpdateAccessoryDto accessoryDto) {
         return accessoryService.updateAccessoryByArticle(article, accessoryDto);
@@ -46,6 +61,10 @@ public class AccessoryController {
 
     @DeleteMapping("/accessory")
     @ResponseStatus(HttpStatus.ACCEPTED)
+    @Caching(evict = {
+            @CacheEvict(cacheNames = "accessory", key = "#dto.accessoryId"),
+            @CacheEvict(cacheNames = "accessory-list", allEntries = true)
+    })
     public ViewDeletedAccessoryDto deleteAccessoryByArticle(@RequestBody @Valid DeleteAccessoryDto dto) {
         return accessoryService.deleteAccessoryByArticle(dto);
     }

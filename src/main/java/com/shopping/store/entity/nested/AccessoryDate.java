@@ -5,7 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.naming.directory.SearchResult;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Embeddable
@@ -13,7 +15,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-public class AccessoryDate {
+public class AccessoryDate implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "creation_date")

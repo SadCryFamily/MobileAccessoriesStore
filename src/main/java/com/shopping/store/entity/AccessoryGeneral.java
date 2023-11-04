@@ -12,6 +12,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Entity
@@ -21,7 +22,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EntityListeners({AuditingEntityListener.class, AccessoryAuditListener.class})
-public class AccessoryGeneral {
+public class AccessoryGeneral implements Serializable {
 
     @Id
     @GeneratedValue(generator = "UUID")

@@ -6,12 +6,13 @@ import com.shopping.store.entity.nested.AccessoryPrice;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class ViewCreatedAccessoryDto {
+public class ViewCreatedAccessoryDto implements Serializable {
 
     private UUID accessoryId;
 

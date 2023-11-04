@@ -5,18 +5,20 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.loader.plan.spi.ScalarReturn;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class AccessoryInfo {
+public class AccessoryInfo implements Serializable {
 
     @Column(name = "accessory_name")
     private String accessoryName;

@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Embeddable
@@ -17,7 +18,7 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AccessoryPrice {
+public class AccessoryPrice implements Serializable {
 
     @Column(name = "accessory_price")
     private BigDecimal accessoryPrice;

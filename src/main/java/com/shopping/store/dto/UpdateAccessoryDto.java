@@ -9,12 +9,13 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UpdateAccessoryDto {
+public class UpdateAccessoryDto implements Serializable {
 
     @NotNull(message = "Name can't be null")
     @Size(min = 5, max = 30, message = "Accessory name must be between 5 and 30 symbols")
