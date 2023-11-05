@@ -4,11 +4,9 @@ import com.shopping.store.dto.*;
 import com.shopping.store.enums.AccessoryType;
 import com.shopping.store.service.AccessoryService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.Cache;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.*;
-import org.springframework.data.redis.cache.CacheStatistics;
-import org.springframework.data.redis.cache.RedisCache;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +21,10 @@ public class AccessoryController {
 
     private final AccessoryService accessoryService;
 
-    private final CacheManager cacheManager;
-
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @CacheEvict(value = "accessory-list", allEntries = true)
     public ViewCreatedAccessoryDto createAccessory(@RequestBody @Valid CreateAccessoryDto createDto) {
-        cacheManager.getCacheNames();
         return accessoryService.createAccessory(createDto);
     }
 

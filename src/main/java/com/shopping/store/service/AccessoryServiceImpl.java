@@ -17,7 +17,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -132,8 +131,8 @@ public class AccessoryServiceImpl implements AccessoryService {
                             return new DeleteNotExistedAccessoryException("Unfortunately, you can't delete non-existed accessory!");
                         });
 
-        Integer deletionStatus =
-                accessoryRepository.removeByAccessoryId(deletableAccessory.getAccessoryId());
+        Integer deletionStatus = 1;
+        accessoryRepository.delete(deletableAccessory);
 
         ViewDeletedAccessoryDto viewDeletedAccessoryDto = new ViewDeletedAccessoryDto(
                 deletableAccessory.getAccessoryId(),
