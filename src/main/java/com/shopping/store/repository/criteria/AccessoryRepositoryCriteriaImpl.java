@@ -19,7 +19,7 @@ public class AccessoryRepositoryCriteriaImpl implements AccessoryRepositoryCrite
 
     @Override
     @Transactional
-    public Optional<AccessoryGeneral> findAccessoryBeforeDeleteByArticle(UUID article) {
+    public Optional<AccessoryGeneral> findAccessoryBeforeManipulationByArticle(UUID article) {
 
         try {
             CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();

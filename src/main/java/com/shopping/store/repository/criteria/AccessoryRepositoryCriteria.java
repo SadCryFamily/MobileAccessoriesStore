@@ -7,6 +7,6 @@ import java.util.UUID;
 
 public interface AccessoryRepositoryCriteria {
 
-    Optional<AccessoryGeneral> findAccessoryBeforeDeleteByArticle(UUID article);
+    Optional<AccessoryGeneral> findAccessoryBeforeManipulationByArticle(UUID article);
 
 }
