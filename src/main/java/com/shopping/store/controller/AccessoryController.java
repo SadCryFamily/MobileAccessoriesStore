@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,7 +25,7 @@ public class AccessoryController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    @CacheEvict(value = "accessory-list", allEntries = true)
+    @CacheEvict(value = "accessory-list", key = "'all'")
     public ViewCreatedAccessoryDto createAccessory(@RequestBody @Valid CreateAccessoryDto createDto) {
         return accessoryService.createAccessory(createDto);
     }
@@ -37,17 +39,24 @@ public class AccessoryController {
 
     @GetMapping("/accessories")
     @ResponseStatus(HttpStatus.OK)
-    @Cacheable(cacheNames = "accessory-list", sync = true)
-    public List<ViewAccessoryDto> viewAllAccessories(
-            @RequestParam(value = "filter", required = false) AccessoryType type) {
-        return accessoryService.viewAllAccessories(Optional.ofNullable(type));
+    @Cacheable(cacheNames = "accessory-list", key = "'all'", sync = true)
+    public List<ViewAccessoryDto> viewAllAccessories() {
+        return accessoryService.viewAllAccessories();
+    }
+
+    @GetMapping("/accessories/filter")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ViewAccessoryDto> viewAllAccessoriesFilteredBy(@RequestParam(value = "type") AccessoryType type,
+                                                               @RequestParam(value = "costFrom",required = false) BigDecimal costFrom,
+                                                               @RequestParam(value = "costTo", required = false) BigDecimal costTo) {
+        return accessoryService.viewAllAccessoriesFilteredBy(type, costFrom, costTo);
     }
 
     @PutMapping("/accessory/{id}")
     @ResponseStatus(HttpStatus.OK)
     @Caching(evict = {
             @CacheEvict(cacheNames = "accessory", key = "#article"),
-            @CacheEvict(cacheNames = "accessory-list", allEntries = true)
+            @CacheEvict(cacheNames = "accessory-list", key = "'all'")
     })
     public ViewUpdatedAccessoryDto updateAccessoryByArticle(@PathVariable("id") UUID article,
                                                             @RequestBody @Valid UpdateAccessoryDto accessoryDto) {
@@ -58,7 +67,7 @@ public class AccessoryController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @Caching(evict = {
             @CacheEvict(cacheNames = "accessory", key = "#dto.accessoryId"),
-            @CacheEvict(cacheNames = "accessory-list", allEntries = true)
+            @CacheEvict(cacheNames = "accessory-list", key = "'all'")
     })
     public ViewDeletedAccessoryDto deleteAccessoryByArticle(@RequestBody @Valid DeleteAccessoryDto dto) {
         return accessoryService.deleteAccessoryByArticle(dto);

@@ -3,6 +3,7 @@ package com.shopping.store.service;
 import com.shopping.store.dto.*;
 import com.shopping.store.enums.AccessoryType;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -13,7 +14,9 @@ public interface AccessoryService {
 
     ViewAccessoryDto viewAccessoryByArticle(UUID article);
 
-    List<ViewAccessoryDto> viewAllAccessories(Optional<AccessoryType> type);
+    List<ViewAccessoryDto> viewAllAccessories();
+
+    List<ViewAccessoryDto> viewAllAccessoriesFilteredBy(AccessoryType type, BigDecimal costFrom, BigDecimal costTo);
 
     ViewUpdatedAccessoryDto updateAccessoryByArticle(UUID article, UpdateAccessoryDto accessoryDto);
 
