@@ -47,11 +47,6 @@ public class AccessoryServiceImpl implements AccessoryService {
         AccessoryGeneral accessoryGeneral = accessoryMapper.toEntity(accessoryDto);
         AccessoryGeneral complete = accessoryRepository.save(accessoryGeneral);
 
-        evictCacheService.evictAccessoryByNew(
-                accessoryDto.getAccessoryType(),
-                accessoryDto.getAccessoryPrice()
-        );
-
         log.info("CREATE -> Accessory [ID: {}, NAME: {}, TYPE: {}]", complete.getAccessoryId(),
                 complete.getAccessoryInfo().getAccessoryName(),
                 complete.getAccessoryInfo().getAccessoryType());
