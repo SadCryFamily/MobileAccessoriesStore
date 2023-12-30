@@ -70,6 +70,4 @@ public class RedisConfiguration {
         container.addMessageListener(new LoggingCacheMessageListener(), topicList);
         return container;
     }
-
-
 }

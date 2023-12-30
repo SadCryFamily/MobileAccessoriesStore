@@ -7,7 +7,17 @@
 
     <property name="accessory_type_default" value="OTHER" dbms="postgresql"/>
 
-    <changeSet id="1" author="Semen Gulenko">
+    <changeSet id="1" author="Denys Kurganskiy">
+
+        <preConditions>
+            <dbms type="postgresql"/>
+            <and>
+                <not>
+                    <tableExists tableName="accessory_general"/>
+                </not>
+            </and>
+        </preConditions>
+
         <createTable tableName="accessory_general">
             <column name="accessory_id" type="uuid">
                 <constraints primaryKeyName="pk_accessory_id" primaryKey="true" nullable="false"/>
@@ -35,7 +45,18 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="2" author="Semen Gulenko">
+    <changeSet id="2" author="Denys Kurganskiy">
+
+        <preConditions>
+            <dbms type="postgresql"/>
+            <and>
+                <not>
+                    <columnExists tableName="accessory_general" columnName="creation_date"/>
+                    <columnExists tableName="accessory_general" columnName="last_update_date"/>
+                </not>
+            </and>
+        </preConditions>
+
         <addColumn tableName="accessory_general">
             <column name="creation_date" type="timestamp">
                 <constraints nullable="false"/>

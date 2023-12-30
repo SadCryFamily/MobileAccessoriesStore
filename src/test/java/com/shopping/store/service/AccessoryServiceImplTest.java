@@ -5,11 +5,17 @@ import com.shopping.store.entity.AccessoryGeneral;
 import com.shopping.store.entity.nested.AccessoryDate;
 import com.shopping.store.enums.AccessoryType;
 import com.shopping.store.enums.Currency;
+import com.shopping.store.exception.DeleteNotExistedAccessoryException;
+import com.shopping.store.exception.NothingToShowAccessoryException;
+import com.shopping.store.exception.UnableToFindAccessoryException;
+import com.shopping.store.exception.UpdateNotExistedAccessoryException;
 import com.shopping.store.mapper.AccessoryMapper;
 import com.shopping.store.repository.AccessoryRepository;
 import com.shopping.store.repository.hibernate.AccessoryHibernateRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,6 +28,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,7 +62,7 @@ class AccessoryServiceImplTest {
         AccessoryGeneral accessoryGeneral = accessoryMapper.toEntity(mockDto);
         accessoryGeneral.setAccessoryId(UUID.randomUUID());
 
-        Mockito.when(accessoryRepository.save(Mockito.any(AccessoryGeneral.class)))
+        when(accessoryRepository.save(Mockito.any(AccessoryGeneral.class)))
                 .thenReturn(accessoryGeneral);
 
         ViewCreatedAccessoryDto expectedDto = accessoryMapper.toViewCreatedDto(accessoryGeneral);
@@ -76,13 +85,26 @@ class AccessoryServiceImplTest {
         AccessoryGeneral accessoryGeneral = accessoryMapper.toEntity(mockDto);
         accessoryGeneral.setAccessoryId(UUID.randomUUID());
 
-        Mockito.when(accessoryRepository.findByAccessoryId(Mockito.any(UUID.class)))
+        when(accessoryRepository.findByAccessoryId(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(accessoryGeneral));
 
         ViewAccessoryDto expectedDto = accessoryMapper.toViewDto(accessoryGeneral);
         ViewAccessoryDto actualDto = accessoryService.viewAccessoryByArticle(UUID.randomUUID());
 
         assertEquals(expectedDto.getAccessoryInfo(), actualDto.getAccessoryInfo());
+    }
+
+    @Test
+    void viewAccessoryByMismatchArticle() {
+
+        UUID mockUUID = UUID.randomUUID();
+
+        UnableToFindAccessoryException actualException =
+                Assertions.assertThrows(UnableToFindAccessoryException.class, () -> {
+                    accessoryService.viewAccessoryByArticle(mockUUID);
+                });
+
+        assertEquals(String.format("Unable to find [Accessory] by ID: %s", mockUUID), actualException.getLocalizedMessage());
     }
 
     @Test
@@ -103,7 +125,7 @@ class AccessoryServiceImplTest {
         List<AccessoryGeneral> mockListDto = new ArrayList<>();
         mockListDto.add(accessoryGeneral);
 
-        Mockito.when(accessoryRepository.findAll(Mockito.any(Sort.class)))
+        when(accessoryRepository.findAll(Mockito.any(Sort.class)))
                 .thenReturn(mockListDto);
 
         List<ViewAccessoryDto> expectedViewDtoList = mockListDto.stream()
@@ -113,6 +135,17 @@ class AccessoryServiceImplTest {
 
         assertEquals(expectedViewDtoList.get(0).getAccessoryInfo(), actualViewDtoList.get(0).getAccessoryInfo());
 
+    }
+
+    @Test
+    void viewAllMismatchAccessories() {
+
+        NothingToShowAccessoryException actualException =
+                Assertions.assertThrows(NothingToShowAccessoryException.class, () -> {
+                    accessoryService.viewAllAccessories();
+                });
+
+        assertEquals("Not any [Accessory] has presented.", actualException.getLocalizedMessage());
     }
 
     @Test
@@ -132,7 +165,7 @@ class AccessoryServiceImplTest {
         List<AccessoryGeneral> mockListDto = new ArrayList<>();
         mockListDto.add(accessoryGeneral);
 
-        Mockito.when(accessoryHibernateRepository.findAllAccessoriesByType(Mockito.any(AccessoryType.class)))
+        when(accessoryHibernateRepository.findAllAccessoriesByType(Mockito.any(AccessoryType.class)))
                 .thenReturn(mockListDto);
 
         List<ViewAccessoryDto> expectedViewDto = mockListDto.stream()
@@ -159,7 +192,7 @@ class AccessoryServiceImplTest {
         AccessoryGeneral accessoryGeneral = accessoryMapper.toEntity(mockDto);
         accessoryGeneral.setAccessoryId(UUID.randomUUID());
 
-        Mockito.when(accessoryRepository.findAccessoryBeforeManipulationByArticle(Mockito.any(UUID.class)))
+        when(accessoryRepository.findAccessoryBeforeManipulationByArticle(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(accessoryGeneral));
 
         UpdateAccessoryDto updateDto = new UpdateAccessoryDto("Test",
@@ -177,6 +210,27 @@ class AccessoryServiceImplTest {
     }
 
     @Test
+    void updateMismatchAccessoryByArticle() {
+
+        when(accessoryRepository.findByAccessoryId(Mockito.any(UUID.class))).thenReturn(Optional.empty());
+
+        UpdateAccessoryDto mockUpdateAccessoryDto = new UpdateAccessoryDto(
+                "Test name",
+                "Test Description",
+                AccessoryType.OTHER,
+                BigDecimal.valueOf(400),
+                Currency.USD
+        );
+
+        UpdateNotExistedAccessoryException actualException =
+                Assertions.assertThrows(UpdateNotExistedAccessoryException.class, () -> {
+                    accessoryService.updateAccessoryByArticle(Mockito.any(UUID.class), mockUpdateAccessoryDto);
+                });
+
+        assertEquals("Unfortunately, you can't update non-existed accessory!", actualException.getLocalizedMessage());
+    }
+
+    @Test
     void deleteAccessoryByArticle() {
 
         CreateAccessoryDto mockDto = new CreateAccessoryDto(
@@ -187,16 +241,37 @@ class AccessoryServiceImplTest {
                 Currency.USD
         );
 
-        AccessoryGeneral accessoryGeneral = accessoryMapper.toEntity(mockDto);
-        accessoryGeneral.setAccessoryId(UUID.randomUUID());
+        UUID mockUUID = UUID.randomUUID();
 
-        Mockito.when(accessoryRepository.findAccessoryBeforeManipulationByArticle(Mockito.any(UUID.class)))
+        AccessoryGeneral accessoryGeneral = accessoryMapper.toEntity(mockDto);
+        accessoryGeneral.setAccessoryId(mockUUID);
+
+        when(accessoryRepository.findAccessoryBeforeManipulationByArticle(Mockito.any(UUID.class)))
                 .thenReturn(Optional.of(accessoryGeneral));
 
-        DeleteAccessoryDto deleteDto = new DeleteAccessoryDto(UUID.randomUUID());
+        DeleteAccessoryDto deleteDto = new DeleteAccessoryDto(mockUUID);
 
-        ViewDeletedAccessoryDto expectedDto = new ViewDeletedAccessoryDto(UUID.randomUUID(), 1);
+        ViewDeletedAccessoryDto expectedDto = new ViewDeletedAccessoryDto(mockUUID, 1);
         ViewDeletedAccessoryDto actualDto = accessoryService.deleteAccessoryByArticle(deleteDto);
 
+        assertEquals(expectedDto, actualDto);
+
+    }
+
+    @Test
+    void deleteMismatchAccessoryByArticle() {
+
+        UUID mockUUID = UUID.randomUUID();
+        DeleteAccessoryDto mockDeleteDto = new DeleteAccessoryDto(mockUUID);
+
+        when(accessoryRepository.findAccessoryBeforeManipulationByArticle(Mockito.any(UUID.class)))
+                .thenReturn(Optional.empty());
+
+        DeleteNotExistedAccessoryException actualException =
+                Assertions.assertThrows(DeleteNotExistedAccessoryException.class, () -> {
+                    accessoryService.deleteAccessoryByArticle(mockDeleteDto);
+                });
+
+        assertEquals("Unfortunately, you can't delete non-existed accessory!", actualException.getLocalizedMessage());
     }
 }
